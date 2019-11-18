@@ -1,15 +1,14 @@
 import React from 'react';
 
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 
 
-const Dropzone = styled.div`
-    height: 100%;
-    width: calc(100% - 24px);
-    margin: 12px;
+const Dropzone = withTheme(styled.div`
+    margin: auto;
+    width: calc(100% - 2 * ${props => props.theme.outerMargin});
     padding: 10px 0;
     background-color: #fff;
     border: 2px dashed #888;
@@ -18,7 +17,7 @@ const Dropzone = styled.div`
     justify-content: center;
     flex-direction: column;
     font-size: 16px;
-`;
+`);
 
 function dragOverHandler(ev) {
     console.log('File(s) in drop zone');
@@ -54,6 +53,5 @@ export default function () {
     return <Dropzone onDrop={dropHandler} onDragOver={dragOverHandler}>
         <FontAwesomeIcon icon={faFileUpload} size="4x" color="#888"/>
         <span>Upload Files</span>
-        <input type="file" onChange={ (e) => console.log(e.target.files) } />
     </Dropzone>
-};
+};//<input type="file" onChange={ (e) => console.log(e.target.files) } name="test"/>

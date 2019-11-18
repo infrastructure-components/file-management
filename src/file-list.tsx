@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import styled, { css } from 'styled-components';
+import styled, { css, withTheme } from 'styled-components';
 
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 
@@ -10,19 +10,18 @@ import { Link, withRouter } from 'react-router-dom';
 import logo from '../assets/logo.png';
 //import book from '../assets/book.pdf';
 
-import Dropzone from './dropzone';
-import { FILE_STORAGE_ID } from './file-storage';
+
 
 
 const bookId = "book";
 
 export const BookFile = () => <File importFrom="../assets/book.pdf" name="book.pdf" id={bookId} />;
 
-const FileList = styled.ul`
+const FileList = withTheme(styled.ul`
     margin: auto;
-    width: calc(100% - 20px);
+    width: calc(100% - 2 * ${({theme}) => theme.outerMargin});
     padding-left: 0;
-`;
+`);
 
 const Head = styled.li`
     padding: 5px;
@@ -127,13 +126,10 @@ export default function () {
         }*/
     ]);
 
-    return <div>
-        <SortableList distance={2} files={files} onSortEnd={
-            ({oldIndex, newIndex}) => {
-                const removed = files.slice(0, oldIndex).concat(files.slice(oldIndex+1));
-                setFiles(removed.slice(0,newIndex).concat([files[oldIndex]]).concat(removed.slice(newIndex)));
-            }
-        }/>
-        <Dropzone />
-    </div>
+    return <SortableList distance={2} files={files} onSortEnd={
+        ({oldIndex, newIndex}) => {
+            const removed = files.slice(0, oldIndex).concat(files.slice(oldIndex+1));
+            setFiles(removed.slice(0,newIndex).concat([files[oldIndex]]).concat(removed.slice(newIndex)));
+        }
+    }/>;
 };
