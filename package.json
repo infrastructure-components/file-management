@@ -5,17 +5,38 @@
   "scripts": {
     "build": "scripts .env build src/index.tsx",
     "deploy-dev": "scripts .env deploy src/index.tsx dev",
-    "file-management": "scripts app src/index.tsx file-management"
+    "file-management": "scripts app src/index.tsx file-management",
+    "start-dev": "scripts .env start src/index.tsx dev"
   },
   "license": "MIT",
   "dependencies": {
-    "infrastructure-components": "^0.3.1-alpha.13",
+    "@apollo/react-hooks": "^3.1.3",
+    "@babel/polyfill": "^7.4.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-brands-svg-icons": "^5.9.0",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "express": "^4.17.1",
+    "graphql": "^14.3.1",
+    "graphql-tag": "^2.10.1",
+    "infrastructure-components": "^0.3.1-alpha.16",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^16.10.2",
+    "react-apollo": "^2.5.5",
     "react-dom": "^16.10.2",
-    "react-sortable-hoc": "^1.10.1"
+    "react-helmet": "^5.2.0",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
+    "react-sortable-hoc": "^1.10.1",
+    "request": "^2.88.0",
+    "serverless-http": "^2.1.0",
+    "styled-components": "^4.1.3",
+    "universal-cookie": "^4.0.1"
   },
   "devDependencies": {
-    "infrastructure-scripts": "^0.3.1-alpha.10",
+    "infrastructure-scripts": "^0.3.1-alpha.16",
+    "serverless-dynamodb-local": "^0.2.38",
+    "serverless-offline": "^4.9.4",
     "serverless-pseudo-parameters": "^2.5.0",
     "serverless-single-page-app-plugin": "^1.0.2"
   }

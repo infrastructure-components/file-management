@@ -18,6 +18,9 @@ const folders = [
     }, {
         name: "Images",
         path: "/images"
+    }, {
+        name: "Sub",
+        path: "/documents/sub"
     },
 ];
 
@@ -28,12 +31,6 @@ export default (
         region='us-east-1'>
 
         <Environment name="dev" />
-
-        {/*<Route
-            path='/'
-            name='Infrastructure-Components'
-            render={(props) => <FileList/>}
-        />*/}
 
         {
             folders.map((folder, index)=> <Route
