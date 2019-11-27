@@ -1,15 +1,15 @@
 import React from 'react';
+import "@babel/polyfill";
 
 import {
     Environment,
     Route,
+    Service, Middleware, Storage,
     ServiceOrientedApp
 } from "infrastructure-components";
 
 import FileList from './file-list';
-import FileStorage from './file-storage';
 import UploadForm from './upload-form';
-import { FILE_STORAGE_ID } from './file-storage';
 import Page from './page';
 
 const folders = [
@@ -28,6 +28,8 @@ const folders = [
     },
 ];
 
+export const FILE_STORAGE_ID = "FILESTORAGE";
+
 export default (
     <ServiceOrientedApp
         stackName = "file-management"
@@ -36,8 +38,16 @@ export default (
 
         <Environment name="dev" />
 
-        {/*<FileStorage />
+        <Storage
+            id={FILE_STORAGE_ID}
+            path="/filestorage"
+        >
+            {/*BookFile />*/}
+        </Storage>
 
+
+
+        {/*
         <Route
             path='/'
             name='Infrastructure-Components'
