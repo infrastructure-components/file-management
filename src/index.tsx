@@ -4,13 +4,13 @@ import "@babel/polyfill";
 import {
     Environment,
     Route,
-    Service, Middleware, Storage,
     ServiceOrientedApp
 } from "infrastructure-components";
 
 import FileList from './file-list';
 import UploadForm from './upload-form';
 import Page from './page';
+import FileStorage from './file-storage';
 
 const folders = [
     {
@@ -28,38 +28,15 @@ const folders = [
     },
 ];
 
-export const FILE_STORAGE_ID = "FILESTORAGE";
-
 export default (
     <ServiceOrientedApp
         stackName = "file-management"
         buildPath = 'build'
-        region='us-east-1'>
+        region='us-est-1'>
 
         <Environment name="dev" />
 
-        <Storage
-            id={FILE_STORAGE_ID}
-            path="/filestorage"
-        >
-            {/*BookFile />*/}
-        </Storage>
-
-
-
-        {/*
-        <Route
-            path='/'
-            name='Infrastructure-Components'
-            render={(props) => <ul>
-         <li>
-         <a href={logo} download target="_blank">Logo</a>
-         </li>
-         <li>
-         <a href="index.html" download target="_blank">Index</a>
-         </li>
-         </ul>}
-        />*/}
+        <FileStorage />
 
         {
             folders.map((folder, index)=> <Route
@@ -67,8 +44,8 @@ export default (
                 path={folder.path}
                 name={folder.name}
                 render={(props) => <Page>
-                    <FileList />
-                    <UploadForm />
+                    <FileList/>
+                    <UploadForm/>
                 </Page>}
             />)
         }

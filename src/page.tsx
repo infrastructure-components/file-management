@@ -2,13 +2,15 @@ import React from 'react'
 
 import { ThemeProvider } from 'styled-components';
 import withStyledTheme from "./styled-theme";
-
+import { RefetchProvider } from './file-storage';
 
 export const Page = withStyledTheme(({styledTheme, children}) => {
 
     return (
         <ThemeProvider theme={styledTheme}>
-            {children}
+            <RefetchProvider>
+                {children}
+            </RefetchProvider>
         </ThemeProvider>
     );
 });
