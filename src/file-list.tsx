@@ -9,6 +9,8 @@ import { Link, withRouter } from 'react-router-dom';
 
 import logo from '../assets/logo.png';
 
+import { IMetaData, MetaDataQuery } from './file-meta-data-entry';
+
 import { FileStorageList } from './file-storage';
 
 const bookId = "book";
@@ -60,6 +62,20 @@ const FolderLink = styled(Link)`
 
 const FileEntry = (props) => <Item>
     <FileLink download target="_blank" {...props}/>
+    <MetaDataQuery prefix={props.prefix} filename={props.children}>{
+        ({loading, fileMetaData, error}) => {
+            if (loading) {
+                return <div>...Loading...</div>;
+            }
+
+            if (fileMetaData) {
+                console.log(fileMetaData)
+                return <div>{fileMetaData.description} {fileMetaData.author}</div>
+            }
+
+            return <div>Error</div>
+        }
+    }</MetaDataQuery>
 </Item>;
 
 
@@ -95,11 +111,14 @@ const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, lo
                 files.filter(
                     item => item.path == location.pathname
                 ).map((file, index) => (
-                    <SortableFile key={`item-${index}`} index={index} href={file.href}>{file.name}</SortableFile>
+                    <SortableFile
+                        key={`item-${index}`}
+                        index={index}
+                        href={file.href}
+                        prefix={location.pathname}
+                        filename={file.name}/>
                 ))
             }
-            {/*
-            */}
         </StyledList>
     );
 })));

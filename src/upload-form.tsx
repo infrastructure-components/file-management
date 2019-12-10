@@ -103,14 +103,19 @@ function UploadForm (props) {
                 value={description}
                 onChange={event => setDescription(event.target.value)}/>
 
-            <button onClick={()=>{
-                upload(selectedFile.pathname, selectedFile.file, () => {
-                    props.refetch();
-                    selectFile(undefined);
-                }, {
-                    author: author,
-                    description: description
-                });
+            <button onClick={(ev)=>{
+                ev.preventDefault();
+                upload(
+                    selectedFile.pathname,
+                    selectedFile.file,
+                    () => {
+                        props.refetch();
+                        selectFile(undefined);
+                    }, {
+                        author: author,
+                        description: description
+                    }
+                );
             }}>Upload now</button>
             <button onClick={(ev)=>{
                 // prevent the label to trigger the file-selection right away

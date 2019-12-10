@@ -2,6 +2,7 @@ import React from 'react';
 import "@babel/polyfill";
 
 import {
+    DataLayer,
     Environment,
     Route,
     ServiceOrientedApp
@@ -11,6 +12,7 @@ import FileList from './file-list';
 import UploadForm from './upload-form';
 import Page from './page';
 import FileStorage from './file-storage';
+import FileMetaDataEntry from './file-meta-data-entry';
 
 const folders = [
     {
@@ -37,6 +39,9 @@ export default (
         <Environment name="dev" />
 
         <FileStorage />
+        <DataLayer id="datalayer">
+            <FileMetaDataEntry />
+        </DataLayer>
 
         {
             folders.map((folder, index)=> <Route

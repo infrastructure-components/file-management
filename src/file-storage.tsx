@@ -4,9 +4,14 @@ import {
     Middleware,
     Storage,
     uploadFile,
-    FilesList, LISTFILES_MODE
+    FilesList,
+    LISTFILES_MODE,
+    mutate,
+    serviceWithDataLayer,
+    STORAGE_ACTION
 } from "infrastructure-components";
 
+import { addMetaData } from './file-meta-data-entry';
 
 export const FILE_STORAGE_ID = "FILESTORAGE";
 
@@ -92,16 +97,38 @@ export default function () {
         path="/filestorage"
     >
         <Middleware
-            callback={ function (req, res, next) {
+            callback={serviceWithDataLayer(async function (dataLayer, req, res, next) {
                 const parsedBody = JSON.parse(req.body);
 
-
-                console.log("this is the service: ", parsedBody.data);
+                console.log("this is the service: ", parsedBody.data, parsedBody.action);
 
                 res.locals = parsedBody.data;
 
-                next();
-            }}
+
+                if (parsedBody.action == STORAGE_ACTION.UPLOAD) {
+
+                    if (parsedBody.data) {
+
+                        if (parsedBody.data.author && parsedBody.data.author.toLowerCase() !== "frank") {
+                            return res.status(403).set({
+                                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+                                "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+                            }).send("not allowed");
+                        }
+
+                        await addMetaData(dataLayer, {
+                                prefix: parsedBody.prefix,
+                                filename: parsedBody.file,
+                                author: parsedBody.data.author,
+                                description: parsedBody.data.description,
+                            }
+                        );
+                    }
+
+                };
+
+                return next();
+            })}
         />
     </Storage>
 };
