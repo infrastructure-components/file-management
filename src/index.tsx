@@ -34,7 +34,7 @@ export default (
     <ServiceOrientedApp
         stackName = "file-management"
         buildPath = 'build'
-        region='us-est-1'>
+        region='us-east-1'>
 
         <Environment name="dev" />
 
