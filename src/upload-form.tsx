@@ -87,6 +87,8 @@ function UploadForm (props) {
         onDragOver={ev =>{ev.preventDefault()}}
     >{
         !selectedFile ? <React.Fragment>
+            <link href="https://use.fontawesome.com/releases/v5.9.0/css/svg-with-js.css" rel="stylesheet"></link>
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css"></link>
                 <FontAwesomeIcon icon={faFileUpload} size="4x" color="#888"/>
                 <span >Upload Files</span>
         </React.Fragment> : <>

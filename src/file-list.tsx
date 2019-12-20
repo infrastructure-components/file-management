@@ -4,8 +4,8 @@ import styled, { css, withTheme } from 'styled-components';
 
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 
-import { File, withRoutes, getFileUrl } from 'infrastructure-components';
-import { Link, withRouter } from 'react-router-dom';
+import { File, withRoutes, getFileUrl, withIsomorphicState } from 'infrastructure-components';
+import { Link, withRouter,  useParams } from 'react-router-dom';
 
 import logo from '../assets/logo.png';
 
@@ -61,21 +61,21 @@ const FolderLink = styled(Link)`
 
 
 const FileEntry = (props) => <Item>
-    <FileLink download target="_blank" {...props}/>
-    <MetaDataQuery prefix={props.prefix} filename={props.children}>{
-        ({loading, fileMetaData, error}) => {
-            if (loading) {
-                return <div>...Loading...</div>;
-            }
+    <FileLink download target="_blank" {...props}>
+        <MetaDataQuery prefix={props.prefix} filename={props.filename}>{
+            ({loading, fileMetaData, error}) => {
+                if (loading) {
+                    return <div>...Loading...</div>;
+                }
 
-            if (fileMetaData) {
-                console.log(fileMetaData)
-                return <div>{fileMetaData.description} {fileMetaData.author}</div>
-            }
+                if (fileMetaData) {
+                    return <div>{props.filename} {fileMetaData.description} {fileMetaData.author}</div>
+                }
 
-            return <div>Error</div>
-        }
-    }</MetaDataQuery>
+                return <div>Error</div>
+            }
+        }</MetaDataQuery>
+    </FileLink>
 </Item>;
 
 
@@ -86,6 +86,9 @@ const Folder =  (props) => <Item>
 const SortableFile = SortableElement(FileEntry);
 
 const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, location}) => {
+
+    //console.log("SortableList: ", files);
+    //console.log("pathname: ", location.pathname);
 
     /** uncomment the second condition to show only direct parents */
     const isParent = (parent, child) => child.startsWith(parent); // && child.substr(parent.length+1).indexOf("/") < 0;
@@ -123,8 +126,15 @@ const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, lo
     );
 })));
 
-const FileList = withRouter((props) => {
-    const [fileList, setFiles] = useState([
+const FileList = withIsomorphicState(withRouter((props) => {
+
+
+    const { foldername } = useParams();
+    //console.log(foldername);
+
+    const [fileList, setFiles] = //useState(
+        props.useIsomorphicState("MYFILELIST",
+        [
         /*{
             name: "Index",
             path: "/",
@@ -144,15 +154,16 @@ const FileList = withRouter((props) => {
         }*/
     ]);
 
-    return <FileStorageList prefix={props.location.pathname} data={{hello: "world"}} >{
+    return <FileStorageList prefix={props./*location.*/pathname} data={{hello: "world"}} >{
         ({loading, data, files, error, ...rest}) => {
+
+            //console.log("FileStorageList" , files, fileList);
 
             if (files && files.length !== fileList.length) {
                 setFiles(files.map(item => ({
                     href: item.url,
                     name: item.file,
-                    name: item.file,
-                    path: props.location.pathname
+                    path: props./*location.*/pathname
                 })));
             };
 
@@ -167,6 +178,6 @@ const FileList = withRouter((props) => {
         }
 
     }</FileStorageList>;
-});
+}));
 
 export default FileList;

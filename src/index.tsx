@@ -4,16 +4,17 @@ import "@babel/polyfill";
 import {
     DataLayer,
     Environment,
+    IsomorphicApp,
+    Middleware,
     Route,
-    ServiceOrientedApp
+    WebApp
 } from "infrastructure-components";
 
-import FileList from './file-list';
-import UploadForm from './upload-form';
-import Page from './page';
 import FileStorage from './file-storage';
 import FileMetaDataEntry from './file-meta-data-entry';
+import FolderRoute from './folder-page';
 
+/*
 const folders = [
     {
         name: "Data",
@@ -28,12 +29,14 @@ const folders = [
         name: "Sub",
         path: "/documents/sub"
     },
-];
+];*/
+
 
 export default (
-    <ServiceOrientedApp
+    <IsomorphicApp
         stackName = "file-management"
         buildPath = 'build'
+        assetsPath = 'assets'
         region='us-east-1'>
 
         <Environment name="dev" />
@@ -41,19 +44,37 @@ export default (
         <FileStorage />
         <DataLayer id="datalayer">
             <FileMetaDataEntry />
+
+
+            <WebApp
+                id="main"
+                path="*"
+                method="GET">
+
+                <FolderRoute/>
+
+
+
+                {/*
+                 <Route
+                 path="/folder/:foldername?"
+                 name="MyApp"
+                 component={Com}
+                 />
+
+                    folders.map((folder, index)=> <Route
+                        key={`folder-${index}`}
+                        path={folder.path}
+                        name={folder.name}
+                        render={(props) => <Page>
+                            <FileList/>
+                            <UploadForm/>
+                        </Page>}
+                    />)
+                */}
+
+            </WebApp>
+
         </DataLayer>
-
-        {
-            folders.map((folder, index)=> <Route
-                key={`folder-${index}`}
-                path={folder.path}
-                name={folder.name}
-                render={(props) => <Page>
-                    <FileList/>
-                    <UploadForm/>
-                </Page>}
-            />)
-        }
-
-    </ServiceOrientedApp>
+    </IsomorphicApp>
 );

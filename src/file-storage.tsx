@@ -100,7 +100,7 @@ export default function () {
             callback={serviceWithDataLayer(async function (dataLayer, req, res, next) {
                 const parsedBody = JSON.parse(req.body);
 
-                console.log("this is the service: ", parsedBody.data, parsedBody.action);
+                //console.log("this is the service: ", parsedBody.data, parsedBody.action);
 
                 res.locals = parsedBody.data;
 
