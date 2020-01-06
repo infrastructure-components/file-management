@@ -9,7 +9,7 @@ import Page from './page';
 
 import { FILE_STORAGE_ID } from './file-storage';
 
-const FolderPage = withRouter(withIsomorphicState(withRequest(({request, useIsomorphicState, ...props}) => {
+const FolderPage = withRouter(withIsomorphicState(withRequest(({request, useIsomorphicState, location, ...props}) => {
 
     /*
     console.log("router data: ", props.location);
@@ -29,7 +29,7 @@ const FolderPage = withRouter(withIsomorphicState(withRequest(({request, useIsom
     }pathname={pathname}
 */
     return <Page {...props}>
-        <FileList />
+        <FileList pathname={location.pathname} />
         <UploadForm/>
     </Page>;
 })));

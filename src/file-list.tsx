@@ -85,7 +85,7 @@ const Folder =  (props) => <Item>
 
 const SortableFile = SortableElement(FileEntry);
 
-const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, location}) => {
+const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, location, pathname=""}) => {
 
     //console.log("SortableList: ", files);
     //console.log("pathname: ", location.pathname);
@@ -98,14 +98,14 @@ const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, lo
             <Head>Name</Head>
             {
 
-                routes.filter(route => route.path !== location.pathname && (
-                        isParent(location.pathname, route.path)||
-                        isParent(route.path, location.pathname)
+                routes.filter(route => route.path !== /*location.*/pathname && (
+                        isParent(/*location.*/pathname, route.path)||
+                        isParent(route.path, /*location.*/pathname)
                     )
                 ).map((route, index) => (
                     <Folder key={'route-'+index} to={ route.path }>
                     {
-                        isParent(route.path, location.pathname) ? ".." : route.name
+                        isParent(route.path, /*location.*/pathname) ? ".." : route.name
                     }
                     </Folder>
                 ))
@@ -157,7 +157,7 @@ const FileList = withIsomorphicState(withRouter((props) => {
     return <FileStorageList prefix={props./*location.*/pathname} data={{hello: "world"}} >{
         ({loading, data, files, error, ...rest}) => {
 
-            //console.log("FileStorageList" , files, fileList);
+            console.log("FileStorageList" , files, fileList, props.pathname);
 
             if (files && files.length !== fileList.length) {
                 setFiles(files.map(item => ({
@@ -169,7 +169,7 @@ const FileList = withIsomorphicState(withRouter((props) => {
 
             return (loading && <div>Loading</div>) ||
                 (error && <div>{error}</div>) ||
-                <SortableList distance={2} files={fileList} onSortEnd={
+                <SortableList distance={2} pathname={props.pathname} files={fileList} onSortEnd={
                     ({oldIndex, newIndex}) => {
                         const removed = fileList.slice(0, oldIndex).concat(fileList.slice(oldIndex+1));
                         setFiles(removed.slice(0,newIndex).concat([fileList[oldIndex]]).concat(removed.slice(newIndex)));
