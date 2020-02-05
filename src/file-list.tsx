@@ -1,89 +1,105 @@
 import React, {useState} from 'react';
 
-import styled from 'styled-components'
+import styled, { css } from 'styled-components';
+
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 
-import { withRoutes } from 'infrastructure-components';
+import { File, withRoutes, getFileUrl } from 'infrastructure-components';
 import { Link, withRouter } from 'react-router-dom';
 
 import logo from '../assets/logo.png';
-import book from '../assets/book.pdf';
+//import book from '../assets/book.pdf';
+
+import Dropzone from './dropzone';
+import { FILE_STORAGE_ID } from './file-storage';
+
+
+const bookId = "book";
+
+export const BookFile = () => <File importFrom="../assets/book.pdf" name="book.pdf" id={bookId} />;
 
 const FileList = styled.ul`
-    margin: 10px;
+    margin: auto;
     width: calc(100% - 20px);
     padding-left: 0;
-    list-style-type: none;
 `;
 
 const Head = styled.li`
     padding: 5px;
     color: #888;
     font-weight: bold;
+    list-style-type: none;
 `;
 
-const FileItem = styled.li`
+const Item = styled.li`
     border-top: 1px solid #888;
     list-style-type: none;
 `;
 
-const FileLink = styled.a`
+const styledLink = css`
     display: block;
     text-decoration: none;
     color: black;
     padding: 5px;
+    
+`
+
+const FileLink = styled.a`
+    ${styledLink}
     &:hover {
         background: #CCC;
     }  
 `;
 
-const File = (props) => <FileItem>
-    <FileLink download target="_blank" {...props}/>
-</FileItem>;
-
-const FolderItem = styled(FileItem)`
-`;
 
 const FolderLink = styled(Link)`
-    display: block;
-    text-decoration: none;
-    color: black;
-    padding: 5px;
+    ${styledLink}
     background: #FFE9A2;
     &:hover {
         background: #AAA;
     }  
 `;
 
-const Folder =  (props) => <FolderItem>
+
+const FileEntry = (props) => <Item>
+    <FileLink download target="_blank" {...props}/>
+</Item>;
+
+
+const Folder =  (props) => <Item>
     <FolderLink {...props}/>
-</FolderItem>;
+</Item>;
 
-const SortableFile = SortableElement(({href, name}) => <File href={href}>{name}</File>);
+const SortableFile = SortableElement(FileEntry);
 
-const SortableList = withRouter(withRoutes(SortableContainer(({items, routes, location}) => {
+const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, location}) => {
+
+    /** uncomment the second condition to show only direct parents */
+    const isParent = (parent, child) => child.startsWith(parent); // && child.substr(parent.length+1).indexOf("/") < 0;
 
     return (
         <FileList>
             <Head>Name</Head>
             {
+
                 routes.filter(route => route.path !== location.pathname && (
-                        route.path.startsWith(location.pathname) ||
-                        location.pathname.startsWith(route.path)
+                        isParent(location.pathname, route.path)||
+                        isParent(route.path, location.pathname)
+
                     )
                 ).map((route, index) => (
                     <Folder key={'route-'+index} to={ route.path }>
                     {
-                        location.pathname.startsWith(route.path) ? ".." : route.name
+                        isParent(route.path, location.pathname) ? ".." : route.name
                     }
                     </Folder>
                 ))
             }
             {
-                items.filter(
+                files.filter(
                     item => item.path == location.pathname
                 ).map((file, index) => (
-                    <SortableFile key={`item-${index}`} index={index} href={file.href} name={file.name}/>
+                    <SortableFile key={`item-${index}`} index={index} href={file.href}>{file.name}</SortableFile>
                 ))
             }
         </FileList>
@@ -93,20 +109,31 @@ const SortableList = withRouter(withRoutes(SortableContainer(({items, routes, lo
 export default function () {
     const [files, setFiles] = useState([
         {
-            name: "Logo",
+            name: "Index",
             path: "/",
-            href: logo
+            href: "index.html"
+        },{
+            name: "App",
+            path: "/",
+            href: "file-management.bundle.js"
         }, {
+            name: "Logo",
+            path: "/documents",
+            href: logo
+        }, /* {
             name: "Book",
             path: "/documents",
-            href: book
-        }
+            href: getFileUrl(FILE_STORAGE_ID, bookId)
+        }*/
     ]);
 
-    return <SortableList distance={2} items={files} onSortEnd={
-        ({oldIndex, newIndex}) => {
-            const removed = files.slice(0, oldIndex).concat(files.slice(oldIndex+1));
-            setFiles(removed.slice(0,newIndex).concat([files[oldIndex]]).concat(removed.slice(newIndex)));
-        }
-    }/>
+    return <div>
+        <SortableList distance={2} files={files} onSortEnd={
+            ({oldIndex, newIndex}) => {
+                const removed = files.slice(0, oldIndex).concat(files.slice(oldIndex+1));
+                setFiles(removed.slice(0,newIndex).concat([files[oldIndex]]).concat(removed.slice(newIndex)));
+            }
+        }/>
+        <Dropzone />
+    </div>
 };
