@@ -8,19 +8,6 @@ import {
 
 import FileList from './file-list';
 
-const folders = [
-    {
-        name: "Data",
-        path: "/"
-    }, {
-        name: "Documents",
-        path: "/documents"
-    }, {
-        name: "Images",
-        path: "/images"
-    },
-];
-
 export default (
     <SinglePageApp
         stackName = "file-management"
@@ -30,10 +17,10 @@ export default (
         <Environment name="dev" />
 
         {/*<Route
-            path='/'
-            name='Infrastructure-Components'
-            render={(props) => <FileList/>}
-        />*/}
+         path='/'
+         name='Infrastructure-Components'
+         render={(props) => <FileList/>}
+         />*/}
 
         {
             folders.map((folder, index)=> <Route
@@ -46,3 +33,16 @@ export default (
 
     </SinglePageApp>
 );
+
+const folders = [
+    {
+        name: "Data",
+        path: "/"
+    }, {
+        name: "Documents",
+        path: "/documents"
+    }, {
+        name: "Images",
+        path: "/images"
+    },
+];
