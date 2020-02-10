@@ -9,10 +9,9 @@ import { Link, withRouter } from 'react-router-dom';
 
 import logo from '../assets/logo.png';
 
-import { IMetaData, MetaDataQuery } from './file-meta-data-entry';
+import Dropzone from './dropzone';
 
 import { FileStorageList } from './file-storage';
-
 const bookId = "book";
 
 export const BookFile = () => <File importFrom="../assets/book.pdf" name="book.pdf" id={bookId} />;
@@ -98,6 +97,7 @@ const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, lo
                 routes.filter(route => route.path !== location.pathname && (
                         isParent(location.pathname, route.path)||
                         isParent(route.path, location.pathname)
+
                     )
                 ).map((route, index) => (
                     <Folder key={'route-'+index} to={ route.path }>
