@@ -17,7 +17,7 @@ const bookId = "book";
 
 export const BookFile = () => <File importFrom="../assets/book.pdf" name="book.pdf" id={bookId} />;
 
-const FileList = styled.ul`
+const StyledList = styled.ul`
     margin: auto;
     width: calc(100% - 20px);
     padding-left: 0;
@@ -77,7 +77,7 @@ const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, lo
     const isParent = (parent, child) => child.startsWith(parent); // && child.substr(parent.length+1).indexOf("/") < 0;
 
     return (
-        <FileList>
+        <StyledList>
             <Head>Name</Head>
             {
 
@@ -101,7 +101,7 @@ const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, lo
                     <SortableFile key={`item-${index}`} index={index} href={file.href}>{file.name}</SortableFile>
                 ))
             }
-        </FileList>
+        </StyledList>
     );
 })));
 
