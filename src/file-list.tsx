@@ -12,6 +12,7 @@ import logo from '../assets/logo.png';
 import Dropzone from './dropzone';
 
 import { FileStorageList } from './file-storage';
+import { FileMetaDataQuery } from './file-meta-data-entry';
 const bookId = "book";
 
 export const BookFile = () => <File importFrom="../assets/book.pdf" name="book.pdf" id={bookId} />;
@@ -61,7 +62,7 @@ const FolderLink = styled(Link)`
 
 const FileEntry = (props) => <Item>
     <FileLink download target="_blank" {...props}/>
-    <MetaDataQuery prefix={props.prefix} filename={props.children}>{
+    <FileMetaDataQuery prefix={props.prefix} filename={props.filename}>{
         ({loading, fileMetaData, error}) => {
             if (loading) {
                 return <div>...Loading...</div>;
@@ -74,7 +75,7 @@ const FileEntry = (props) => <Item>
 
             return <div>Error</div>
         }
-    }</MetaDataQuery>
+    }</FileMetaDataQuery>
 </Item>;
 
 
@@ -110,14 +111,16 @@ const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, lo
             {
                 files.filter(
                     item => item.path == location.pathname
-                ).map((file, index) => (
-                    <SortableFile
+                ).map((file, index) => {
+                    console.log(file);
+
+                    return <SortableFile
                         key={`item-${index}`}
                         index={index}
                         href={file.href}
                         prefix={location.pathname}
                         filename={file.name}/>
-                ))
+                })
             }
         </StyledList>
     );

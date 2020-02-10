@@ -27,7 +27,9 @@ export interface IMetaData {
 }
 
 export async function addMetaData(dataLayer, data: IMetaData) {
-    mutate(
+    console.log("data: ", data)
+
+    await mutate(
         dataLayer.client,
         dataLayer.setEntryMutation(FILEMETADATA_ENTRYID, Object.assign({}, data, {
             prefix: prePrefix(data.prefix),
@@ -35,8 +37,10 @@ export async function addMetaData(dataLayer, data: IMetaData) {
     );
 };
 
-export const MetaDataQuery = withDataLayer(props => (
-    <Query {...props.getEntryQuery(FILEMETADATA_ENTRYID, {
+export const FileMetaDataQuery = withDataLayer(props => {
+
+    console.log(props.filename, props.prefix);
+    return <Query {...props.getEntryQuery(FILEMETADATA_ENTRYID, {
         prefix: prePrefix(props.prefix),
         filename: props.filename}
     )} >{
@@ -46,5 +50,5 @@ export const MetaDataQuery = withDataLayer(props => (
                 fileMetaData={data ? data[`get_${FILEMETADATA_ENTRYID}`] : undefined}
             />
         )
-    }</Query>)
-);
+    }</Query>
+});
