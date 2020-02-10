@@ -10,7 +10,6 @@ import { Link, withRouter } from 'react-router-dom';
 import logo from '../assets/logo.png';
 //import book from '../assets/book.pdf';
 
-import Dropzone from './dropzone';
 import { FILE_STORAGE_ID } from './file-storage';
 
 
@@ -134,6 +133,6 @@ export default function () {
                 setFiles(removed.slice(0,newIndex).concat([files[oldIndex]]).concat(removed.slice(newIndex)));
             }
         }/>
-        <Dropzone />
+
     </div>
 };

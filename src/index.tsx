@@ -8,6 +8,21 @@ import {
 
 import FileList from './file-list';
 
+
+const folders = [
+    {
+        name: "Data",
+        path: "/"
+    }, {
+        name: "Documents",
+        path: "/documents"
+    }, {
+        name: "Images",
+        path: "/images"
+    },
+];
+
+
 export default (
     <SinglePageApp
         stackName = "file-management"
@@ -33,16 +48,3 @@ export default (
 
     </SinglePageApp>
 );
-
-const folders = [
-    {
-        name: "Data",
-        path: "/"
-    }, {
-        name: "Documents",
-        path: "/documents"
-    }, {
-        name: "Images",
-        path: "/images"
-    },
-];
