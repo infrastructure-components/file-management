@@ -2,8 +2,11 @@ import React from 'react';
 import "@babel/polyfill";
 
 import {
+    Authentication,
+    AuthenticationProvider,
     DataLayer,
     Environment,
+    Identity,
     IsomorphicApp,
     Middleware,
     Route,
@@ -13,23 +16,10 @@ import {
 import FileStorage from './file-storage';
 import FileMetaDataEntry from './file-meta-data-entry';
 import FolderRoute from './folder-page';
+import LoginRoute from './login-page';
+import FileListService from './file-list-service';
 
-/*
-const folders = [
-    {
-        name: "Data",
-        path: "/"
-    }, {
-        name: "Documents",
-        path: "/documents"
-    }, {
-        name: "Images",
-        path: "/images"
-    }, {
-        name: "Sub",
-        path: "/documents/sub"
-    },
-];*/
+export const SENDER_EMAIL = "mail@react-architect.com";
 
 
 export default (
@@ -37,44 +27,45 @@ export default (
         stackName = "file-management"
         buildPath = 'build'
         assetsPath = 'assets'
-        region='us-east-1'>
+        region='eu-west-1'
+        iamRoleStatements={[{
+            "Effect": "Allow",
+            "Action": ['"ses:SendEmail"', '"ses:SendRawEmail"',],
+            "Resource": `"arn:aws:ses:eu-west-1:604800795243:identity/react-architect.com"`,
+        }]}>
 
         <Environment name="dev" />
 
         <FileStorage />
         <DataLayer id="datalayer">
-            <FileMetaDataEntry />
+            <Identity >
+                <Authentication
+                    id="emailauth"
+                    provider={AuthenticationProvider.EMAIL}
+                    loginUrl="/login"
+                    callbackUrl="/authentication"
+                    senderEmail={SENDER_EMAIL}
+                    getSubject={(recipient: string) => `Confirm Your Mail-Address`}
+                    getHtmlText={(recipient: string, url: string) => {
+                        return `Hello ${recipient},<br/>
+Please verify your e-mail address by following <a href="${url}">this link</a></p>`
+                    }}>
+
+                    <FileMetaDataEntry />
+                    <FileListService/>
+
+                    <WebApp
+                        id="main"
+                        path="*"
+                        method="GET">
+
+                        <LoginRoute/>
+                        <FolderRoute/>
 
 
-            <WebApp
-                id="main"
-                path="*"
-                method="GET">
-
-                <FolderRoute/>
-
-
-
-                {/*
-                 <Route
-                 path="/folder/:foldername?"
-                 name="MyApp"
-                 component={Com}
-                 />
-
-                    folders.map((folder, index)=> <Route
-                        key={`folder-${index}`}
-                        path={folder.path}
-                        name={folder.name}
-                        render={(props) => <Page>
-                            <FileList/>
-                            <UploadForm/>
-                        </Page>}
-                    />)
-                */}
-
-            </WebApp>
-
+                    </WebApp>
+                </Authentication>
+            </Identity>
         </DataLayer>
     </IsomorphicApp>
 );

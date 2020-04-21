@@ -1,5 +1,14 @@
 import React from 'react';
-import { Middleware,  withRequest, withIsomorphicState, Route, LISTFILES_MODE, serviceWithStorage } from 'infrastructure-components';
+import {
+    Middleware,
+    withRequest,
+    withIsomorphicState,
+    SecuredRoute,
+    LISTFILES_MODE,
+    serviceWithStorage,
+    userLogout,
+    withUser
+} from 'infrastructure-components';
 
 import { withRouter, useParams } from 'react-router-dom';
 
@@ -8,37 +17,24 @@ import UploadForm from './upload-form';
 import Page from './page';
 
 import { FILE_STORAGE_ID } from './file-storage';
+import { sendEmail } from './file-list-service';
 
-const FolderPage = withRouter(withIsomorphicState(withRequest(({request, useIsomorphicState, location, ...props}) => {
+const FolderPage = withUser(withRouter(withIsomorphicState(withRequest(({userId, request, useIsomorphicState, location, ...props}) => {
 
-    /*
-    console.log("router data: ", props.location);
-
-    const {foldername} = useParams();
-    console.log("foldername: ", foldername)
-
-    const [pathname, setPathname] = useIsomorphicState("pathname", "/");
-
-    if (request && pathname !== request.params["0"]) {
-        console.log("request: ", request.params, " -- ", request.query);
-
-        setPathname(request.params["0"]);
-
-    } else {
-        console.log("no request")
-    }pathname={pathname}
-*/
     return <Page {...props}>
         <FileList pathname={location.pathname} />
         <UploadForm/>
+        <button onClick={()=> userLogout("/login")}>Logout</button>
+        <button onClick={()=> sendEmail(userId, location.pathname) }>Send list</button>
     </Page>;
-})));
+}))));
 
 export default function FolderRoute (props) {
-    return <Route
-        path="*"
+
+    return <SecuredRoute
+        path={/^((?!\/(?!(?:\/authentication|\/login|\/filestorage))([$|A-Za-z\-_]+)).)*$/}
         name="Default"
-        component={FolderPage}
+        render={p=><FolderPage {...p}/>}
 
     >
         <Middleware callback={serviceWithStorage(async (listFiles, req, res, next) => {
@@ -67,6 +63,6 @@ export default function FolderRoute (props) {
 
             next();
         })}/>
-    </Route>
+    </SecuredRoute>
 
 }

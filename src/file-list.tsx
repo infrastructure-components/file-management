@@ -88,10 +88,10 @@ const SortableFile = SortableElement(FileEntry);
 const SortableList = withRouter(withRoutes(SortableContainer(({files, routes, location, pathname=""}) => {
 
     //console.log("SortableList: ", files);
-    //console.log("pathname: ", location.pathname);
+    console.log("pathname: ", location.pathname, pathname);
 
     /** uncomment the second condition to show only direct parents */
-    const isParent = (parent, child) => child.startsWith(parent); // && child.substr(parent.length+1).indexOf("/") < 0;
+    const isParent = (parent, child) => child.toString().startsWith(parent.toString()); // && child.substr(parent.length+1).indexOf("/") < 0;
 
     return (
         <StyledList>

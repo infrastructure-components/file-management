@@ -104,7 +104,6 @@ export default function () {
 
                 res.locals = parsedBody.data;
 
-
                 if (parsedBody.action == STORAGE_ACTION.UPLOAD) {
 
                     if (parsedBody.data) {
